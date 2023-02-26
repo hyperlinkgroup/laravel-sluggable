@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Hyperlink\Sluggable\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class SluggableCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-sluggable';
 
     public $description = 'My command';
 
