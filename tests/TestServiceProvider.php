@@ -6,8 +6,6 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class TestServiceProvider extends BaseServiceProvider
 {
-    protected bool $defer = false;
-
     public function boot(): void
     {
         $this->loadMigrationsFrom(

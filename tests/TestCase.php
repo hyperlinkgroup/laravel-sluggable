@@ -15,6 +15,12 @@ class TestCase extends Orchestra
         Factory::guessFactoryNamesUsing(
             static fn (string $modelName) => 'Hyperlink\\Sluggable\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
+
+        $this->artisan('migrate');
+
+        $this->beforeApplicationDestroyed(function () {
+            $this->artisan('migrate:rollback');
+        });
     }
 
     protected function getPackageProviders($app): array
@@ -28,6 +34,11 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app): void
     {
         config()->set('database.default', 'testing');
+        config()->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
 
         $migration = include __DIR__.'/../database/migrations/create_sluggable_table.php.stub';
         $migration->up();

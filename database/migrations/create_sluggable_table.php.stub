@@ -11,11 +11,18 @@ return new class extends Migration
         Schema::create(config('sluggable.table', 'slugs'), static function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('model_id')->index();
-            $table->string('model_type')->index();
-            $table->string('slug')->index();
+            $table->foreignId('sluggable_id');
+            $table->string('sluggable_type');
+            $table->string(config('sluggable.column'))->unique();
 
             $table->timestamps();
+
+            $table->index(['sluggable_id', 'sluggable_type']);
         });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists(config('sluggable.table', 'slugs'));
     }
 };
