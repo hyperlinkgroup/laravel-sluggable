@@ -61,3 +61,28 @@ it('can show the slug history', function () {
         'test-slug-2',
     ]);
 });
+
+it('can show the slug history with dates', function () {
+    $post = Post::create([
+        'title' => 'Test Title',
+    ]);
+
+    $this->travel(1)->minutes();
+
+    Slug::create([
+        config('sluggable.column') => 'test-slug-2',
+        'sluggable_id' => $post->id,
+        'sluggable_type' => Post::class,
+    ]);
+
+    expect($post->slugs()->count())->toBe(2);
+    $post->slugHistoryWithDates->each(function ($slug) {
+        expect($slug)->toHaveKeys([
+            'slug',
+            'created_at',
+        ]);
+
+        expect($slug['slug'])->toBeString();
+        expect($slug['created_at'])->toBeInstanceOf(Carbon\Carbon::class);
+    });
+});

@@ -52,4 +52,14 @@ trait Sluggable {
             get: fn () => $this->slugs()->latest()->get()->pluck('slug')->toArray(),
         );
     }
+
+    public function slugHistoryWithDates(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->slugs()->latest()->get()->map(fn ($slug) => [
+                'slug' => $slug->slug,
+                'created_at' => $slug->created_at,
+            ]),
+        );
+    }
 }
