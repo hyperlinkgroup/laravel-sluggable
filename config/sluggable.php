@@ -28,6 +28,16 @@ return [
     'separator' => '-',
 
     /*
+     * The separator used to separate the slug from the counter.
+     */
+    'counter_separator' => '_',
+
+    /*
+     * The max length of the slug.
+     */
+    'max_length' => 255,
+
+    /*
      * The model that will be used to generate the slug.
      */
     'model' => Hyperlink\Sluggable\Models\Slug::class,
