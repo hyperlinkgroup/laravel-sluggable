@@ -26,4 +26,9 @@ return [
      * no existing slugs will be changed.
      */
     'separator' => '-',
+
+    /*
+     * The model that will be used to generate the slug.
+     */
+    'model' => Hyperlink\Sluggable\Models\Slug::class,
 ];
