@@ -8,10 +8,12 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('laravel_sluggable_table', function (Blueprint $table) {
+        Schema::create(config('sluggable.table', 'slugs'), static function (Blueprint $table) {
             $table->id();
 
-            // add fields
+            $table->foreignId('model_id')->index();
+            $table->string('model_type')->index();
+            $table->string('slug')->index();
 
             $table->timestamps();
         });
