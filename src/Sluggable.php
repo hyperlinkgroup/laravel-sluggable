@@ -10,16 +10,45 @@ class Sluggable
 
     protected string $counterSeparator = '_';
 
+    protected int $max_length = 255;
+
     public function __construct()
+    {
+        $this->reloadConfig();
+    }
+
+    private function reloadConfig(): void
     {
         $this->separator = config('sluggable.separator', '-');
         $this->counterSeparator = config('sluggable.counter_separator', '_');
+        $this->max_length = config('sluggable.max_length', 255);
+    }
+
+    public function withSeparator(string $separator): self
+    {
+        $this->separator = $separator;
+
+        return $this;
+    }
+
+    public function withCounterSeparator(string $counterSeparator): self
+    {
+        $this->counterSeparator = $counterSeparator;
+
+        return $this;
+    }
+
+    public function withMaxLength(int $max_length): self
+    {
+        $this->max_length = $max_length;
+
+        return $this;
     }
 
     public function slugify($text): string
     {
         $string = Str::slug($text, $this->separator);
-        $string = Str::substr($string, 0, config('sluggable.max_length', 255));
+        $string = Str::substr($string, 0, $this->max_length);
 
         $i = 2;
         // WHILE the slug already exists
@@ -36,6 +65,8 @@ class Sluggable
             // FINALLY add the counter and increment it
             $string .= $i++;
         }
+
+        $this->reloadConfig();
 
         return $string;
     }

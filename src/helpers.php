@@ -8,3 +8,10 @@ if (! function_exists('slugify')) {
         return app(Sluggable::class)->slugify($string);
     }
 }
+
+if (! function_exists('sluggable')) {
+    function sluggable(): Sluggable
+    {
+        return app(Sluggable::class);
+    }
+}

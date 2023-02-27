@@ -70,3 +70,39 @@ it('creates a slug from a string with a custom length', function () {
 
     expect(slugify($text))->toBe('this-');
 });
+
+it('creates a slug with a custom separator and reloads the config afterwards', function () {
+    $text = 'This is a test';
+
+    expect(
+        sluggable()->withSeparator('_')->slugify($text)
+    )->toBe('this_is_a_test');
+
+    expect(slugify($text))->toBe('this-is-a-test');
+});
+
+it('creates a slug with a custom counter separator and reloads the config afterwards', function () {
+    $text = 'This is a test';
+
+    config('sluggable.model')::create([
+        'sluggable_id' => 1,
+        'sluggable_type' => Post::class,
+        'slug' => 'this-is-a-test',
+    ]);
+
+    expect(
+        sluggable()->withCounterSeparator('-')->slugify($text)
+    )->toBe('this-is-a-test-2');
+
+    expect(slugify($text))->toBe('this-is-a-test_2');
+});
+
+it('creates a slug with a custom max length and reloads the config afterwards', function () {
+    $text = 'This is a test';
+
+    expect(
+        sluggable()->withMaxLength(5)->slugify($text)
+    )->toBe('this-');
+
+    expect(slugify($text))->toBe('this-is-a-test');
+});
