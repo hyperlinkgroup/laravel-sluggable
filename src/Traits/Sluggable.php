@@ -35,6 +35,10 @@ trait Sluggable
 
     protected function sluggableCreated(): void
     {
+        if (! $this->getSlugAutoGeneration()) {
+            return;
+        }
+
         $this->slugs()->create([
             'slug' => $this->makeSlug(),
         ]);
@@ -42,6 +46,10 @@ trait Sluggable
 
     protected function sluggableUpdated(): void
     {
+        if (! $this->getSlugAutoGeneration()) {
+            return;
+        }
+
         if ($this->isDirty($this->getSlugCreatedFrom())) {
             $this->slugs()->create([
                 'slug' => $this->makeSlug(),
@@ -70,7 +78,7 @@ trait Sluggable
     public function slug(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->latestSlug->slug,
+            get: fn () => $this->latestSlug?->slug,
             set: fn ($value) => $this->slugs()->create(['slug' => $value])
         );
     }
@@ -102,5 +110,10 @@ trait Sluggable
         }
 
         return $this->slugCreatedFrom;
+    }
+
+    public function getSlugAutoGeneration(): bool
+    {
+        return $this->slugAutoGeneration ?? true;
     }
 }
