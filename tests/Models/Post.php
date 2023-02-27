@@ -10,6 +10,6 @@ class Post extends Model
     use Sluggable;
 
     protected $fillable = [
-        'title'
+        'title',
     ];
 }

@@ -1,7 +1,5 @@
 <?php
 
-use Hyperlink\Sluggable\Exceptions\ConfigModelMissing;
-use Hyperlink\Sluggable\Exceptions\ConfigModelWrong;
 use Hyperlink\Sluggable\Tests\Models\Post;
 
 it('creates a slug from a string', function () {

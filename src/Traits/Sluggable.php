@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-trait Sluggable {
+trait Sluggable
+{
     /**
      * Boot the trait, check if the config is set and if the model is correct.
      *
@@ -22,10 +23,9 @@ trait Sluggable {
             throw new ConfigModelMissing();
         }
 
-        if (!is_a(config('sluggable.model'), Model::class, true)) {
+        if (! is_a(config('sluggable.model'), Model::class, true)) {
             throw new ConfigModelWrong();
         }
-
     }
 
     public function slugs(): MorphMany

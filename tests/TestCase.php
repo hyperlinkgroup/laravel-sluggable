@@ -2,9 +2,9 @@
 
 namespace Hyperlink\Sluggable\Tests;
 
+use Hyperlink\Sluggable\SluggableServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Hyperlink\Sluggable\SluggableServiceProvider;
 
 class TestCase extends Orchestra
 {

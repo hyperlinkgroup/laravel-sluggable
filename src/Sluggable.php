@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 class Sluggable
 {
     protected string $separator = '-';
+
     protected string $counterSeparator = '_';
 
     public function __construct()
