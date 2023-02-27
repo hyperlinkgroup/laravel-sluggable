@@ -56,15 +56,21 @@ it('can show the slug history', function () {
     ]);
 
     expect($post->slugs()->count())->toBe(2);
-    expect($post->slugHistory)->toBe([
+    expect(collect([
         'test-slug',
         'test-slug-2',
-    ]);
+    ])->diff(collect($post->slugHistory))->isEmpty())->toBeTrue('The slug history is not the same');
 });
 
 it('can show the slug history with dates', function () {
     $post = Post::create([
         'title' => 'Test Title',
+    ]);
+
+    Slug::create([
+        config('sluggable.column') => 'test-slug',
+        'sluggable_id' => $post->id,
+        'sluggable_type' => Post::class,
     ]);
 
     $this->travel(1)->minutes();

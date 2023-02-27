@@ -49,7 +49,7 @@ trait Sluggable {
     public function slugHistory(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->slugs()->latest()->get()->pluck('slug')->toArray(),
+            get: fn () => $this->slugs()->latest()->get()->pluck('slug'),
         );
     }
 
