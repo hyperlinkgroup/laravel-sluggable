@@ -2,6 +2,9 @@
 
 namespace Hyperlink\Sluggable;
 
+use Hyperlink\Sluggable\Exceptions\ConfigModelMissing;
+use Hyperlink\Sluggable\Exceptions\ConfigModelWrong;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Sluggable
@@ -14,10 +17,22 @@ class Sluggable
 
     protected string $text = '';
 
+    /**
+     * @throws ConfigModelWrong
+     * @throws ConfigModelMissing
+     */
     public function __construct(string $text = '')
     {
         $this->text = $text;
         $this->reloadConfig();
+
+        if (config('sluggable.model') === null) {
+            throw new ConfigModelMissing();
+        }
+
+        if (! is_a(config('sluggable.model'), Model::class, true)) {
+            throw new ConfigModelWrong(config('sluggable.model'));
+        }
     }
 
     private function reloadConfig(): void

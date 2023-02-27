@@ -5,11 +5,11 @@ namespace Hyperlink\Sluggable\Tests\Models;
 use Hyperlink\Sluggable\Traits\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class PostWithoutSlugCreatedFrom extends Model
 {
     use Sluggable;
 
-    protected string $slugCreatedFrom = 'title';
+    protected $table = 'posts';
 
     protected $fillable = [
         'title',

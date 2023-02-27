@@ -4,6 +4,7 @@ namespace Hyperlink\Sluggable\Traits;
 
 use Hyperlink\Sluggable\Exceptions\ConfigModelMissing;
 use Hyperlink\Sluggable\Exceptions\ConfigModelWrong;
+use Hyperlink\Sluggable\Exceptions\SlugCreatedFromMissing;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -24,8 +25,36 @@ trait Sluggable
         }
 
         if (! is_a(config('sluggable.model'), Model::class, true)) {
-            throw new ConfigModelWrong();
+            throw new ConfigModelWrong(config('sluggable.model'));
         }
+
+        static::created(fn (Model $model) => $model->sluggableCreated());
+
+        static::updated(fn (Model $model) => $model->sluggableUpdated());
+    }
+
+    protected function sluggableCreated(): void
+    {
+        $this->slugs()->create([
+            'slug' => $this->makeSlug(),
+        ]);
+    }
+
+    protected function sluggableUpdated(): void
+    {
+        if ($this->isDirty($this->getSlugCreatedFrom())) {
+            $this->slugs()->create([
+                'slug' => $this->makeSlug(),
+            ]);
+        }
+    }
+
+    /**
+     * @throws SlugCreatedFromMissing
+     */
+    protected function makeSlug(): string
+    {
+        return (string) sluggable($this->{$this->getSlugCreatedFrom()});
     }
 
     public function slugs(): MorphMany
@@ -61,5 +90,17 @@ trait Sluggable
                 'created_at' => $slug->created_at,
             ]),
         );
+    }
+
+    /**
+     * @throws SlugCreatedFromMissing
+     */
+    public function getSlugCreatedFrom(): string
+    {
+        if (! isset($this->slugCreatedFrom)) {
+            throw new SlugCreatedFromMissing($this);
+        }
+
+        return $this->slugCreatedFrom;
     }
 }
