@@ -106,3 +106,49 @@ it('creates a slug with a custom max length and reloads the config afterwards', 
 
     expect(slugify($text))->toBe('this-is-a-test');
 });
+
+it('returns an empty string if the string is empty', function () {
+    $text = '';
+
+    expect(slugify($text))->toBe('');
+});
+
+it('creates a slug if the string is given in the constructor', function () {
+    $text = 'This is a test';
+
+    expect(
+        sluggable($text)->slugify()
+    )->toBe('this-is-a-test');
+});
+
+it('creates a slug with the __toString method', function () {
+    $text = 'This is a test';
+
+    expect(
+        (string) sluggable($text)
+    )->toBe('this-is-a-test');
+});
+
+it('creates a sug with the toString method', function () {
+    $text = 'This is a test';
+
+    expect(
+        sluggable($text)->toString()
+    )->toBe('this-is-a-test');
+
+    expect(
+        sluggable()->toString($text)
+    )->toBe('this-is-a-test');
+});
+
+it('creates a slug with the get method', function () {
+    $text = 'This is a test';
+
+    expect(
+        sluggable($text)->get()
+    )->toBe('this-is-a-test');
+
+    expect(
+        sluggable()->get($text)
+    )->toBe('this-is-a-test');
+});

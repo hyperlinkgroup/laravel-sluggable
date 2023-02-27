@@ -12,8 +12,11 @@ class Sluggable
 
     protected int $max_length = 255;
 
-    public function __construct()
+    protected string $text = '';
+
+    public function __construct(string $text = '')
     {
+        $this->text = $text;
         $this->reloadConfig();
     }
 
@@ -45,9 +48,16 @@ class Sluggable
         return $this;
     }
 
-    public function slugify($text): string
+    public function slugify(string $text = ''): string
     {
-        $string = Str::slug($text, $this->separator);
+        if (Str::length($text) > 0) {
+            $this->text = $text;
+        }
+        if (Str::length($this->text) === 0) {
+            return '';
+        }
+
+        $string = Str::slug($this->text, $this->separator);
         $string = Str::substr($string, 0, $this->max_length);
 
         $i = 2;
@@ -69,5 +79,20 @@ class Sluggable
         $this->reloadConfig();
 
         return $string;
+    }
+
+    public function __toString(): string
+    {
+        return $this->slugify();
+    }
+
+    public function toString(string $text = ''): string
+    {
+        return $this->slugify($text);
+    }
+
+    public function get(string $text = ''): string
+    {
+        return $this->slugify($text);
     }
 }

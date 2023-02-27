@@ -3,15 +3,15 @@
 use Hyperlink\Sluggable\Sluggable;
 
 if (! function_exists('slugify')) {
-    function slugify($string): string
+    function slugify($text): string
     {
-        return app(Sluggable::class)->slugify($string);
+        return app(Sluggable::class)->slugify($text);
     }
 }
 
 if (! function_exists('sluggable')) {
-    function sluggable(): Sluggable
+    function sluggable(string $text = ''): Sluggable
     {
-        return app(Sluggable::class);
+        return app(Sluggable::class, ['text' => $text]);
     }
 }
