@@ -3,7 +3,7 @@
 use Hyperlink\Sluggable\Sluggable;
 
 if (! function_exists('slugify')) {
-    function slugify($string): array|string|null
+    function slugify($string): string
     {
         return app(Sluggable::class)->slugify($string);
     }
