@@ -1,19 +1,11 @@
-# Create permanent seo friendly slugs for every model
+# Slugs for Laravel - laravel-sluggable
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/hyperlink/laravel-sluggable.svg?style=flat-square)](https://packagist.org/packages/hyperlink/laravel-sluggable)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/hyperlink/laravel-sluggable/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/hyperlink/laravel-sluggable/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/hyperlink/laravel-sluggable/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/hyperlink/laravel-sluggable/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/hyperlinkgroup/laravel-sluggable/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/hyperlinkgroup/laravel-sluggable/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/hyperlinkgroup/laravel-sluggable/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/hyperlinkgroup/laravel-sluggable/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/hyperlink/laravel-sluggable.svg?style=flat-square)](https://packagist.org/packages/hyperlink/laravel-sluggable)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-sluggable.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-sluggable)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Create permanent seo friendly slugs for every model
 
 ## Installation
 
@@ -40,20 +32,75 @@ This is the contents of the published config file:
 
 ```php
 return [
+    /*
+     * The name of the table that will store the slugs.
+     */
+    'table' => 'slugs',
+
+    /*
+     * The name of the column that will store the slug.
+     */
+    'column' => 'slug',
+
+    /*
+     * The separator used to separate words in the slug.
+     * ATTENTION: If you change this value
+     * no existing slugs will be changed.
+     */
+    'separator' => '-',
+
+    /*
+     * The separator used to separate the slug from the counter.
+     * If the slug already exists, a counter will be added.
+     * ATTENTION: If you change this value
+     * no existing slugs will be changed.
+     */
+    'counter_separator' => '_',
+
+    /*
+     * The max length of the slug excluding the counter.
+     * ATTENTION: If you change this value to above 255
+     * you must also publish the migration and
+     * change column type in the database.
+     */
+    'max_length' => 255,
+
+    /*
+     * The model that will be used to generate the slug.
+     * You can use your own model by extending the provided model.
+     */
+    'model' => Hyperlink\Sluggable\Models\Slug::class,
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-sluggable-views"
 ```
 
 ## Usage
 
 ```php
-$sluggable = new Hyperlink\Sluggable();
-echo $sluggable->echoPhrase('Hello, Hyperlink!');
+class Post extends Model
+{
+    use Sluggable; // Add this trait to your model
+
+    // The column that will be used to generate the slug
+    protected string $slugCreatedFrom = 'title';
+}
+```
+The trait will register an observer that will generate the slug when the model is created or updated.
+```php
+    public static function bootSluggable(): void
+    {
+        // ...
+        static::created(/* ... */);
+
+        static::updated(/* ... */);
+        // ...
+    }
+```
+You can overwrite it with
+```php
+protected function makeSlug(): string
+{
+    return (string) sluggable($this->{$this->getSlugCreatedFrom()});
+}
 ```
 
 ## Testing
@@ -61,14 +108,6 @@ echo $sluggable->echoPhrase('Hello, Hyperlink!');
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 

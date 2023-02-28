@@ -13,12 +13,12 @@ return [
     'column' => 'slug',
 
     /*
-     * The maximum length of the slug.
+     * The max length of the slug excluding the counter.
      * ATTENTION: If you change this value to above 255
      * you must also publish the migration and
      * change column type in the database.
      */
-    'length' => 255,
+    'max_length' => 255,
 
     /*
      * The separator used to separate words in the slug.
@@ -29,16 +29,15 @@ return [
 
     /*
      * The separator used to separate the slug from the counter.
+     * If the slug already exists, a counter will be added.
+     * ATTENTION: If you change this value
+     * no existing slugs will be changed.
      */
     'counter_separator' => '_',
 
     /*
-     * The max length of the slug.
-     */
-    'max_length' => 255,
-
-    /*
      * The model that will be used to generate the slug.
+     * You can use your own model by extending the provided model.
      */
     'model' => Hyperlink\Sluggable\Models\Slug::class,
 ];
